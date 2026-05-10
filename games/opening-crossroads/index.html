@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>개항의 갈림길 — 왜양일체론 vs 통상개화론</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang&family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-G350VXSFGE"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-G350VXSFGE');
+  </script>
+
+  <style>
+    :root {
+      --ink: #090b0d;
+      --gold: #c9a052;
+      --paper: #f5f0e8;
+      --gold2: #e8c97a;
+      --red: #8b1c1c;
+      --era-accent: #003087;
+      --era-bg: #f0ece4;
+      --era-surface: #e8e0d4;
+      --seal: #6e1f1f;
+      --line: rgba(9, 11, 13, 0.14);
+      --shadow: rgba(9, 11, 13, 0.18);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100dvh;
+      font-family: 'Noto Sans KR', sans-serif;
+      background:
+        linear-gradient(115deg, rgba(201,160,82,0.15), transparent 36%),
+        linear-gradient(180deg, var(--era-bg), var(--paper));
+      color: var(--ink);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        repeating-linear-gradient(90deg, rgba(9,11,13,0.025) 0 1px, transparent 1px 7px),
+        repeating-linear-gradient(0deg, rgba(9,11,13,0.018) 0 1px, transparent 1px 9px);
+      mix-blend-mode: multiply;
+    }
+
+    #app {
+      width: min(100%, 760px);
+      min-height: 100dvh;
+      margin: 0 auto;
+      padding: 22px 16px 56px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+      color: rgba(9, 11, 13, 0.68);
+      font-size: 13px;
+    }
+
+    .era-tag {
+      min-height: 32px;
+      padding: 6px 10px;
+      border: 1px solid rgba(0, 48, 135, 0.24);
+      background: rgba(245, 240, 232, 0.72);
+      color: var(--era-accent);
+      font-weight: 700;
+    }
+
+    .progress {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(9, 11, 13, 0.18);
+    }
+
+    .dot.active { background: var(--gold); }
+
+    section[hidden] { display: none; }
+
+    .scene {
+      border: 1px solid var(--line);
+      background: rgba(245, 240, 232, 0.88);
+      box-shadow: 0 18px 42px var(--shadow);
+      padding: clamp(20px, 5vw, 36px);
+    }
+
+    .scene + .scene { margin-top: 16px; }
+
+    h1, h2, h3 {
+      font-family: 'Noto Serif KR', serif;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      font-size: clamp(30px, 7vw, 52px);
+      margin-bottom: 14px;
+    }
+
+    h2 {
+      font-size: clamp(24px, 5vw, 34px);
+      margin-bottom: 12px;
+    }
+
+    h3 {
+      font-size: 19px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      font-size: 17px;
+      line-height: 1.75;
+      word-break: keep-all;
+    }
+
+    .lead {
+      font-size: 18px;
+      color: rgba(9, 11, 13, 0.76);
+      margin-bottom: 22px;
+    }
+
+    .notice {
+      margin: 18px 0;
+      padding: 14px;
+      border-left: 4px solid var(--gold);
+      background: rgba(232, 224, 212, 0.72);
+      line-height: 1.65;
+      font-size: 15px;
+    }
+
+    .role-grid {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    @media (min-width: 720px) {
+      .role-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .role-card,
+    .argument-card,
+    .history-panel {
+      border: 1px solid var(--line);
+      background: rgba(232, 224, 212, 0.64);
+      padding: 16px;
+    }
+
+    .role-card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--era-accent);
+      font-family: 'Noto Serif KR', serif;
+      font-size: 20px;
+    }
+
+    .role-card p,
+    .argument-card p,
+    .history-panel p {
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      min-height: 48px;
+      padding: 13px 16px;
+      border: none;
+      border-radius: 4px;
+      font-family: 'Noto Serif KR', serif;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .btn:active {
+      transform: translateY(0) scale(0.97);
+    }
+
+    .btn-primary {
+      background: var(--gold);
+      color: var(--ink);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid var(--gold);
+      color: var(--ink);
+    }
+
+    .btn-choice {
+      margin-top: 10px;
+      background: rgba(245, 240, 232, 0.92);
+      border: 1px solid rgba(0, 48, 135, 0.24);
+      color: var(--ink);
+      text-align: left;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-weight: 700;
+    }
+
+    .btn-row {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    @media (min-width: 640px) {
+      .btn-row { grid-template-columns: 1fr 1fr; }
+    }
+
+    .speaker {
+      display: inline-flex;
+      min-height: 32px;
+      align-items: center;
+      padding: 5px 9px;
+      margin-bottom: 10px;
+      background: var(--ink);
+      color: var(--gold2);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .round-title {
+      color: var(--seal);
+      font-family: 'Noto Serif KR', serif;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .quote {
+      margin-top: 16px;
+      padding: 16px;
+      border: 1px solid rgba(201, 160, 82, 0.42);
+      background: rgba(9, 11, 13, 0.92);
+      color: var(--paper);
+      font-family: 'Gowun Batang', serif;
+      font-size: 16px;
+      line-height: 1.75;
+    }
+
+    .ai-response {
+      margin-top: 16px;
+      padding: 16px;
+      border-left: 4px solid var(--era-accent);
+      background: rgba(245, 240, 232, 0.9);
+    }
+
+    .ai-response p {
+      font-size: 16px;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    .pill {
+      padding: 6px 9px;
+      border: 1px solid rgba(201, 160, 82, 0.45);
+      background: rgba(245, 240, 232, 0.75);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .result-grid {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0;
+    }
+
+    @media (min-width: 720px) {
+      .result-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .copyright {
+      font-size: 12px;
+      color: rgba(120,100,80,0.4);
+      text-align: center;
+      margin-top: 32px;
+    }
+
+    .tt {
+      border-bottom: 1.5px dashed var(--gold);
+      cursor: pointer;
+      position: relative;
+      white-space: nowrap;
+      color: inherit;
+      transition: border-color 0.15s;
+    }
+
+    .tt:hover { border-bottom-color: var(--red); }
+
+    #tt-bubble {
+      position: fixed;
+      z-index: 9000;
+      max-width: 240px;
+      background: var(--ink);
+      border: 1px solid rgba(184,134,11,0.6);
+      border-radius: 4px;
+      padding: 10px 13px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.6);
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.18s, transform 0.18s;
+    }
+
+    #tt-bubble.show { opacity: 1; transform: translateY(0); }
+
+    #tt-bubble .tb-word {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--gold2);
+      margin-bottom: 5px;
+    }
+
+    #tt-bubble .tb-desc {
+      font-size: 12px;
+      color: rgba(240,228,192,0.85);
+      line-height: 1.7;
+    }
+  </style>
+</head>
+<body>
+  <main id="app">
+    <div class="topbar">
+      <span class="era-tag">개항기 · 1875~1876</span>
+      <div class="progress" aria-label="진행 단계">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+    </div>
+
+    <section id="scene-intro" class="scene" aria-label="시작 화면">
+      <h1>개항의 갈림길</h1>
+      <p class="lead">왜양일체론 vs 통상개화론</p>
+      <p>
+        1875년 <span class="tt" data-tip="%EC%9A%B4%EC%9A%94%ED%98%B8(%E9%9B%B2%E6%8F%9A%E8%99%9F)%20%E2%80%94%20%EC%9D%BC%EB%B3%B8%EC%9D%B4%20%EA%B0%95%ED%99%94%EB%8F%84%20%EB%B6%80%EA%B7%BC%EC%97%90%20%EB%B3%B4%EB%82%B8%20%EA%B5%B0%ED%95%A8." data-word="운요호">운요호</span>
+        사건 뒤, 조선 조정은 일본과의 수교 문제를 두고 갈라집니다.
+        문을 닫으면 고립될 수 있고, 문을 열면 침투당할 수 있습니다.
+      </p>
+      <div class="notice">
+        이 게임은 실제 역사 인물의 논거를 바탕으로 만든 대리 토론입니다.
+        정답을 맞히는 게임이 아니라, 두 입장이 무엇을 보고 무엇을 놓쳤는지 따져보는 활동입니다.
+      </div>
+      <button class="btn btn-primary" onclick="show('scene-role')">입장 선택하기</button>
+    </section>
+
+    <section id="scene-role" class="scene" aria-label="역할 선택" hidden>
+      <h2>어느 입장에서 토론할까요?</h2>
+      <p>선택한 입장에 따라 상대 AI가 반대 논리로 반박합니다.</p>
+      <div class="role-grid">
+        <article class="role-card">
+          <strong>최익현 입장</strong>
+          <p>
+            일본은 서양식 침략 질서와 연결되어 있다고 봅니다.
+            <span class="tt" data-tip="%EC%99%9C%EC%96%91%EC%9D%BC%EC%B2%B4%EB%A1%A0(%E5%80%AD%E6%B4%8B%E4%B8%80%E9%AB%94%E8%AB%96)%20%E2%80%94%20%EC%9D%BC%EB%B3%B8%EA%B3%BC%20%EC%84%9C%EC%96%91%EC%9D%84%20%EA%B0%99%EC%9D%80%20%EC%9C%84%ED%97%98%EC%9C%BC%EB%A1%9C%20%EB%B3%B4%EB%8A%94%20%EC%A3%BC%EC%9E%A5." data-word="왜양일체론">왜양일체론</span>
+            으로 개항 반대 논리를 펼칩니다.
+          </p>
+          <button class="btn btn-outline" onclick="chooseRole('choi')">최익현 입장으로 시작</button>
+        </article>
+        <article class="role-card">
+          <strong>박규수 입장</strong>
+          <p>
+            문을 닫는 것만으로 나라를 지킬 수 없다고 봅니다.
+            <span class="tt" data-tip="%ED%86%B5%EC%83%81%EA%B0%9C%ED%99%94%EB%A1%A0(%E9%80%9A%E5%95%86%E9%96%8B%E5%8C%96%E8%AB%96)%20%E2%80%94%20%ED%86%B5%EC%83%81%EA%B3%BC%20%EA%B8%B0%EC%88%A0%20%EC%88%98%EC%9A%A9%EC%9C%BC%EB%A1%9C%20%EB%B6%80%EA%B5%AD%EA%B0%95%EB%B3%91%EC%9D%84%20%EC%A4%80%EB%B9%84%ED%95%98%EC%9E%90%EB%8A%94%20%EC%A3%BC%EC%9E%A5." data-word="통상개화론">통상개화론</span>
+            으로 자주적 개국을 주장합니다.
+          </p>
+          <button class="btn btn-outline" onclick="chooseRole('park')">박규수 입장으로 시작</button>
+        </article>
+      </div>
+    </section>
+
+    <section id="scene-brief" class="scene" aria-label="토론 전 확인" hidden>
+      <h2>토론 전 확인</h2>
+      <p id="brief-text"></p>
+      <div class="pill-row">
+        <span class="pill">3라운드 토론</span>
+        <span class="pill">선택지 최대 4개</span>
+        <span class="pill">결과 복사 가능</span>
+      </div>
+      <button class="btn btn-primary" onclick="startDebate()">토론 시작</button>
+    </section>
+
+    <section id="scene-debate" class="scene" aria-label="토론 장면" hidden>
+      <div class="round-title" id="round-label"></div>
+      <h2 id="round-question"></h2>
+      <p id="round-context"></p>
+      <div id="choice-buttons" class="btn-row"></div>
+      <div id="ai-response" class="ai-response" hidden>
+        <span class="speaker" id="ai-speaker"></span>
+        <p id="ai-text"></p>
+        <button class="btn btn-primary" id="next-button" onclick="nextRound()">다음 쟁점으로</button>
+      </div>
+    </section>
+
+    <section id="scene-final" class="scene" aria-label="최종 발언" hidden>
+      <h2>마지막 발언</h2>
+      <p>토론을 마무리하며, 당신의 입장에서 가장 지키고 싶은 가치를 고르세요.</p>
+      <div class="btn-row">
+        <button class="btn btn-choice" onclick="finishGame('security')">외세 침투를 막는 자주성</button>
+        <button class="btn btn-choice" onclick="finishGame('reform')">변화에 대응하는 개혁 능력</button>
+        <button class="btn btn-choice" onclick="finishGame('balance')">자주성과 개혁의 균형</button>
+      </div>
+    </section>
+
+    <section id="scene-result" class="scene" aria-label="결과 화면" hidden>
+      <h2>토론 결과</h2>
+      <p id="result-summary"></p>
+      <div class="result-grid">
+        <article class="history-panel">
+          <h3>최익현 입장의 의미와 한계</h3>
+          <p>
+            일본의 침투 가능성과 불평등 조약의 위험을 날카롭게 경계했습니다.
+            그러나 문호 개방과 기술 수용을 모두 막으면 대응 능력이 약해질 수 있었습니다.
+          </p>
+        </article>
+        <article class="history-panel">
+          <h3>박규수 입장의 의미와 한계</h3>
+          <p>
+            세계 정세 변화와 기술 수용의 필요성을 보았습니다.
+            그러나 실제 강화도 조약은 일본의 무력 압박 속에 불평등하게 진행되었습니다.
+          </p>
+        </article>
+      </div>
+      <div class="quote" id="history-note"></div>
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="copyResult()">결과 복사하기</button>
+        <button class="btn btn-primary" onclick="restartGame()">다시 하기</button>
+      </div>
+      <p class="copyright">© 찰리쌤 · hischarlie.tistory.com</p>
+    </section>
+  </main>
+
+  <div id="tt-bubble"><div class="tb-word"></div><div class="tb-desc"></div></div>
+
+  <script>
+    const TIPS = {
+      '운요호': '운요호(雲揚號) — 일본이 강화도 부근에 보낸 군함.',
+      '왜양일체론': '왜양일체론(倭洋一體論) — 일본과 서양을 같은 위험으로 보는 주장.',
+      '통상개화론': '통상개화론(通商開化論) — 통상과 기술 수용으로 나라를 키우자는 주장.',
+      '위정척사': '위정척사(衛正斥邪) — 바른 도를 지키고 사악함을 물리침.',
+      '강화도 조약': '강화도 조약(江華島條約) — 1876년 조선과 일본이 맺은 조약.',
+      '불평등 조약': '불평등 조약 — 한쪽 나라에 불리한 조건의 조약.',
+      '부국강병': '부국강병(富國强兵) — 나라를 부유하게 하고 군사를 강하게 함.',
+      '수교': '수교(修交) — 나라 사이에 외교 관계를 맺는 일.',
+      '상소': '상소(上疏) — 신하가 왕에게 글로 의견을 올리는 일.'
+    };
+
+    function tt(word, tipKey) {
+      const tip = TIPS[tipKey || word] || '';
+      if (!tip) return word;
+      return '<span class="tt" data-tip="' + encodeURIComponent(tip) + '" data-word="' + word + '">' + word + '</span>';
+    }
+
+    const bubble = document.getElementById('tt-bubble');
+    let bubbleTimer = null;
+    document.addEventListener('click', function(e) {
+      const el = e.target.closest('.tt');
+      if (el) {
+        e.stopPropagation();
+        bubble.querySelector('.tb-word').textContent = el.dataset.word;
+        bubble.querySelector('.tb-desc').textContent = decodeURIComponent(el.dataset.tip);
+        const rect = el.getBoundingClientRect();
+        const bw = 240;
+        const left = Math.max(8, Math.min(rect.left + rect.width / 2 - bw / 2, window.innerWidth - bw - 8));
+        bubble.style.width = bw + 'px';
+        bubble.style.left = left + 'px';
+        bubble.style.top = '-9999px';
+        bubble.classList.add('show');
+        const bubH = bubble.offsetHeight;
+        bubble.style.top = (rect.top - bubH - 14 < 8)
+          ? (rect.bottom + 10) + 'px'
+          : (rect.top - bubH - 14) + 'px';
+        if (bubbleTimer) clearTimeout(bubbleTimer);
+        bubbleTimer = setTimeout(() => bubble.classList.remove('show'), 4000);
+      } else {
+        bubble.classList.remove('show');
+      }
+    });
+
+    const rounds = [
+      {
+        question: '일본은 어떤 존재인가?',
+        context: '일본은 수교를 요구합니다. 오래된 이웃으로 볼까요, 새로운 침략 질서와 연결된 세력으로 볼까요?',
+        choiChoices: [
+          { text: '일본은 서양식 힘의 질서를 받아들였다. 가볍게 문을 열 수 없다.', axis: 'security' },
+          { text: '조약은 말로는 평등해 보여도 실제로는 조선의 허점을 노릴 수 있다.', axis: 'security' },
+          { text: '먼저 우리의 제도와 방비를 바로잡은 뒤에 외교를 논해야 한다.', axis: 'balance' }
+        ],
+        parkChoices: [
+          { text: '일본을 무조건 거부하면 국제 정세를 살필 통로도 닫힌다.', axis: 'reform' },
+          { text: '수교 자체보다 중요한 것은 조선이 주도권을 잃지 않는 방식이다.', axis: 'balance' },
+          { text: '외국의 기술과 정보를 알아야 방어할 힘도 만들 수 있다.', axis: 'reform' }
+        ],
+        choiReply: '박규수 입장 AI: 위험을 아는 일과 문을 닫는 일은 다릅니다. 일본을 살피고 기술을 배우지 않으면 조선은 더 늦게 위험을 알게 됩니다.',
+        parkReply: '최익현 입장 AI: 수교라는 말이 곧 안전을 뜻하지 않습니다. 일본이 군함을 앞세웠다면 그 시작부터 조선의 자주성을 흔드는 일입니다.'
+      },
+      {
+        question: '나라를 지키는 방법은 무엇인가?',
+        context: '조선은 군사와 산업의 변화 앞에 서 있습니다. 전통 질서를 지켜야 할까요, 기술을 받아들여 힘을 길러야 할까요?',
+        choiChoices: [
+          { text: '외세와의 조약은 침투의 시작이 될 수 있으니 먼저 막아야 한다.', axis: 'security' },
+          { text: '나라의 근본 질서가 무너지면 새 기술도 백성을 지키지 못한다.', axis: 'security' },
+          { text: '방비를 강화하되, 무리한 통상은 늦추어야 한다.', axis: 'balance' }
+        ],
+        parkChoices: [
+          { text: '서양 기술을 몰라서는 서양식 무력에 맞설 수 없다.', axis: 'reform' },
+          { text: '통상을 통해 정보를 얻고 군사와 산업을 고쳐야 한다.', axis: 'reform' },
+          { text: '개국은 굴복이 아니라 조선이 살아남기 위한 준비여야 한다.', axis: 'balance' }
+        ],
+        choiReply: '박규수 입장 AI: 근본을 지키려면 힘도 필요합니다. 기술과 정보를 거부한 채 자주성을 말하면 실제 위기에서 선택지가 줄어듭니다.',
+        parkReply: '최익현 입장 AI: 기술 수용이 자주적이라는 보장은 없습니다. 불리한 조약으로 시작하면 기술보다 먼저 권리가 빼앗길 수 있습니다.'
+      },
+      {
+        question: '백성에게 더 위험한 선택은?',
+        context: '개항은 새로운 물건과 정보의 통로가 될 수 있지만, 경제 침투와 불평등한 조건도 가져올 수 있습니다.',
+        choiChoices: [
+          { text: '불평등한 통상은 백성의 삶과 조선의 법을 흔들 수 있다.', axis: 'security' },
+          { text: '외국 상인과 군함이 들어오면 조선이 스스로 통제하기 어렵다.', axis: 'security' },
+          { text: '외교를 하더라도 조약 조건을 먼저 바로 세워야 한다.', axis: 'balance' }
+        ],
+        parkChoices: [
+          { text: '고립이 길어지면 백성은 낡은 제도와 약한 국방의 피해를 본다.', axis: 'reform' },
+          { text: '개항의 위험을 줄이려면 더 정확한 정보와 제도 개혁이 필요하다.', axis: 'balance' },
+          { text: '상공업과 군사 기술을 키워야 백성의 삶도 지킬 수 있다.', axis: 'reform' }
+        ],
+        choiReply: '박규수 입장 AI: 침투가 두렵다면 더더욱 세계의 제도와 기술을 알아야 합니다. 모른 채 막기만 하면 대응은 늘 뒤처집니다.',
+        parkReply: '최익현 입장 AI: 변화가 필요하다는 말은 맞습니다. 그러나 강요된 조약을 변화의 길로 착각하면 백성은 불평등의 대가를 치릅니다.'
+      }
+    ];
+
+    let role = '';
+    let roundIndex = 0;
+    let history = [];
+    let scores = { security: 0, reform: 0, balance: 0 };
+    let finalValue = '';
+
+    function gaEvent(event_name, params = {}) {
+      if (typeof gtag === 'function') {
+        gtag('event', event_name, params);
+      }
+    }
+
+    function show(id) {
+      ['scene-intro', 'scene-role', 'scene-brief', 'scene-debate', 'scene-final', 'scene-result'].forEach(sceneId => {
+        document.getElementById(sceneId).hidden = sceneId !== id;
+      });
+      updateDots(id);
+      window.scrollTo(0, 0);
+    }
+
+    function updateDots(id) {
+      const order = ['scene-intro', 'scene-role', 'scene-brief', 'scene-debate', 'scene-result'];
+      const active = Math.max(0, order.indexOf(id));
+      document.querySelectorAll('.dot').forEach((dot, index) => {
+        dot.classList.toggle('active', index <= active);
+      });
+    }
+
+    function chooseRole(selected) {
+      role = selected;
+      history = [];
+      scores = { security: 0, reform: 0, balance: 0 };
+      finalValue = '';
+      const text = role === 'choi'
+        ? '당신은 최익현 입장에서 토론합니다. 일본과 서양식 침략 질서의 연결, 불평등 조약의 위험, 조선의 자주성 문제를 중심으로 주장하세요.'
+        : '당신은 박규수 입장에서 토론합니다. 자주적 개국, 기술 수용, 국제 정세 파악, 부국강병의 필요성을 중심으로 주장하세요.';
+      document.getElementById('brief-text').innerHTML = text;
+      gaEvent('role_selected', { game_id: 'opening_crossroads', role });
+      show('scene-brief');
+    }
+
+    function startDebate() {
+      roundIndex = 0;
+      gaEvent('game_start', { game_id: 'opening_crossroads', role });
+      renderRound();
+      show('scene-debate');
+    }
+
+    function renderRound() {
+      const round = rounds[roundIndex];
+      document.getElementById('round-label').textContent = (roundIndex + 1) + '라운드 / 3라운드';
+      document.getElementById('round-question').textContent = round.question;
+      document.getElementById('round-context').textContent = round.context;
+      const buttons = document.getElementById('choice-buttons');
+      buttons.innerHTML = '';
+      document.getElementById('ai-response').hidden = true;
+
+      const choices = role === 'choi' ? round.choiChoices : round.parkChoices;
+      choices.forEach((choice, index) => {
+        const button = document.createElement('button');
+        button.className = 'btn btn-choice';
+        button.type = 'button';
+        button.textContent = choice.text;
+        button.onclick = () => chooseArgument(choice, index);
+        buttons.appendChild(button);
+      });
+    }
+
+    function chooseArgument(choice, index) {
+      scores[choice.axis] += 1;
+      const round = rounds[roundIndex];
+      const reply = role === 'choi' ? round.choiReply : round.parkReply;
+      const speaker = role === 'choi' ? '박규수 입장 AI' : '최익현 입장 AI';
+      history.push({
+        round: roundIndex + 1,
+        question: round.question,
+        choice: choice.text,
+        reply
+      });
+      document.getElementById('ai-speaker').textContent = speaker;
+      document.getElementById('ai-text').textContent = reply.replace(speaker + ': ', '');
+      document.getElementById('ai-response').hidden = false;
+      document.getElementById('choice-buttons').innerHTML = '';
+      document.getElementById('next-button').textContent = roundIndex === rounds.length - 1 ? '마지막 발언으로' : '다음 쟁점으로';
+      gaEvent('choice_made', {
+        game_id: 'opening_crossroads',
+        role,
+        scene: roundIndex + 1,
+        choice_index: index + 1,
+        axis: choice.axis
+      });
+    }
+
+    function nextRound() {
+      roundIndex += 1;
+      if (roundIndex >= rounds.length) {
+        show('scene-final');
+      } else {
+        renderRound();
+      }
+    }
+
+    function finishGame(value) {
+      finalValue = value;
+      scores[value] += 1;
+      renderResult();
+      gaEvent('game_complete', { game_id: 'opening_crossroads', role, final_value: value });
+      show('scene-result');
+    }
+
+    function dominantAxis() {
+      const entries = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+      return entries[0][0];
+    }
+
+    function renderResult() {
+      const axis = dominantAxis();
+      const roleName = role === 'choi' ? '최익현' : '박규수';
+      const axisText = {
+        security: '외세 침투를 막는 자주성을 가장 강하게 보았습니다.',
+        reform: '변화에 대응하는 개혁 능력을 가장 강하게 보았습니다.',
+        balance: '자주성과 개혁을 함께 보려는 균형 감각이 두드러졌습니다.'
+      };
+      document.getElementById('result-summary').textContent =
+        roleName + ' 입장에서 토론한 당신은 ' + axisText[axis] +
+        ' 이 결과는 정답이 아니라, 어떤 역사적 위험을 더 크게 보았는지를 보여줍니다.';
+      document.getElementById('history-note').innerHTML =
+        '역사 해설: ' + tt('강화도 조약') + '은 조선 최초의 근대적 조약이었지만, 일본의 무력 압박 속에서 체결된 ' +
+        tt('불평등 조약') + '이었습니다. 최익현의 경계는 이후 일본 침투와 연결되고, 박규수의 문제의식은 조선이 변화하는 세계 정세에 대응해야 했다는 점을 보여줍니다.';
+    }
+
+    function restartGame() {
+      role = '';
+      roundIndex = 0;
+      history = [];
+      scores = { security: 0, reform: 0, balance: 0 };
+      finalValue = '';
+      show('scene-intro');
+    }
+
+    function copyResult() {
+      const roleName = role === 'choi' ? '최익현(왜양일체론)' : '박규수(통상개화론)';
+      const lines = [
+        '개항의 갈림길 — 토론 결과',
+        '',
+        '내 입장: ' + roleName,
+        '마지막 가치: ' + finalValueLabel(finalValue),
+        '',
+        '내가 선택한 주장:',
+        ...history.map(item => item.round + '. ' + item.choice),
+        '',
+        '정리: 두 입장은 모두 조선이 처한 위험을 보았다. 최익현은 침투의 위험을, 박규수는 고립의 위험을 더 크게 보았다.',
+        '',
+        '© 찰리쌤 · hischarlie.tistory.com'
+      ];
+      const text = lines.join('\n');
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => alert('복사되었습니다!'));
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        ta.setSelectionRange(0, 99999);
+        try { document.execCommand('copy'); alert('복사되었습니다!'); }
+        catch(e) { alert('복사 실패. 직접 선택해서 복사해주세요.'); }
+        document.body.removeChild(ta);
+      }
+      gaEvent('result_copied', { game_id: 'opening_crossroads', role });
+    }
+
+    function finalValueLabel(value) {
+      if (value === 'security') return '외세 침투를 막는 자주성';
+      if (value === 'reform') return '변화에 대응하는 개혁 능력';
+      return '자주성과 개혁의 균형';
+    }
+  </script>
+</body>
+</html>
