@@ -36,7 +36,7 @@
   <section id="camera" hidden aria-labelledby="cameraTitle"><h1 class="stage-title" id="cameraTitle">함께, 화면 안으로</h1><p class="sub" id="cameraDescription">눈높이에 카메라를 맞추고 얼굴이 화면 안에 모두 보이도록 서 주세요.</p><div class="camera-layout"><div><div class="stage"><video id="video" autoplay muted playsinline aria-label="좌우 반전 카메라 미리보기"></video><div class="guide" aria-hidden="true"></div><div class="pose" id="pose">준비가 되면 촬영을 시작해 주세요.</div><div class="guide-label">안내선과 문구는 사진에 저장되지 않습니다.</div><div class="count" id="count" hidden aria-live="off"></div><div class="flash" id="flash"></div></div><div class="shot-progress" id="shotProgress" aria-label="촬영 진행"><div></div><div></div><div></div><div></div></div><p class="status" id="cameraStatus" role="status" aria-live="polite"></p></div><div class="camera-controls"><label class="field">카메라<select id="cameraSelect" aria-label="카메라 선택"><option value="">기본 카메라</option></select></label><label class="field">첫 컷 준비 시간<select id="firstDelay"><option value="5">5초</option><option value="3">3초</option><option value="8">8초</option></select></label><button class="btn primary" id="shootButton" disabled>네 컷 촬영 시작</button><button class="btn" id="cameraRetry" hidden>카메라 다시 연결</button><button class="btn" id="cameraBack">돌아가기</button></div></div></section>
   <section id="result" hidden aria-labelledby="resultTitle"><div class="result-layout"><div class="preview-well"><span class="sample-pill" id="sampleLabel" hidden>예시 이미지 · 실제 촬영 사진이 아닙니다</span><div class="sheet-wrap"><canvas class="sheet" id="sheet" width="900" height="2700" aria-label="최종 세로 네 컷 미리보기"></canvas><div id="stickerLayer"></div></div></div><div class="result-tools"><h1 class="stage-title" id="resultTitle">우리의 네 컷을 골라요</h1><p class="sub">디자인을 고르고, 그날의 소품과 구호로 꾸며요.</p><div class="label">디자인 선택</div><div class="design-options" role="group" aria-label="결과물 디자인"><button class="design-button" data-design="ticket" aria-pressed="true"><span class="swatch" aria-hidden="true"></span>나주역 승차권</button><button class="design-button" data-design="archive" aria-pressed="false"><span class="swatch archive" aria-hidden="true"></span>역사 기록관</button><button class="design-button" data-design="note" aria-pressed="false"><span class="swatch note" aria-hidden="true"></span>기억 노트</button></div><div class="label">스티커 꾸미기</div><p class="hint">누르면 사진에 붙어요. 붙인 스티커는 손가락으로 끌어서 옮겨요.</p><div class="sticker-palette" id="stickerPalette" role="group" aria-label="역사 스티커"></div><div class="sticker-tools"><button class="btn" id="stkSmall">작게</button><button class="btn" id="stkBig">크게</button><button class="btn" id="stkDel">지우기</button></div><p id="stickerInfo" role="status" aria-live="polite"></p><div class="label">사진 확인</div><p class="hint" id="retakeHint">마음에 들지 않는 한 컷만 다시 찍을 수 있어요.</p><div class="thumbnails" id="thumbnails"></div><div class="actions"><button class="btn primary" id="submitButton">이 사진으로 접수</button><a class="btn" id="downloadButton" download>사진 저장</a></div><div class="actions"><button class="btn" id="retakeAll">네 컷 다시 촬영</button><button class="btn" id="resultHome">사진 지우고 처음으로</button><button class="btn" id="parkButton">사진 보관하고 다음 팀</button></div><p class="status" id="resultStatus" role="status" aria-live="polite"></p><div class="notice error" id="sendError" role="alert" hidden></div><button class="btn primary" id="retryButton" hidden>같은 사진 다시 전송</button><p class="hint" id="outputInfo">세로 1:3 · JPG 900 × 2700px</p></div></div></section>
   <section id="done" hidden aria-labelledby="doneTitle"><div class="receipt"><p class="eyebrow">기억할 순간을 남겼어요</p><h1 id="doneTitle">접수되었습니다</h1><p>사진을 받을 때 아래 접수번호를 알려 주세요.</p><div class="job-number" id="doneNumber"></div><p class="sub" id="doneDetail"></p><div class="actions"><button class="btn primary" id="nextButton">다음 팀 촬영</button><a class="btn" id="doneDownload" download>사진 저장</a></div></div></section>
-  <footer class="footer"><span>복정고등학교 · 학생의 날 기념</span><span>역사네컷 v1.8.1 · <a href="https://www.mpva.go.kr/mpva/selectBbsNttView.do?bbsNo=16&amp;key=77&amp;nttNo=5402" target="_blank" rel="noopener noreferrer">역사 설명 출처</a></span></footer>
+  <footer class="footer"><span>복정고등학교 · 학생의 날 기념</span><span>역사네컷 v1.8.2 · <a href="https://www.mpva.go.kr/mpva/selectBbsNttView.do?bbsNo=16&amp;key=77&amp;nttNo=5402" target="_blank" rel="noopener noreferrer">역사 설명 출처</a></span></footer>
 </main>
 <script>
 'use strict';
@@ -92,6 +92,9 @@ const THEMES = {
 const $ = id => document.getElementById(id);
 const S = { scene:'welcome', booth:'B1', design:'ticket', shots:[], jobId:'', sample:false, stream:null, busy:false, cameraReady:false, retakeIndex:null, cameraReturn:'welcome', dataUrl:'', pending:null, submitted:false, art:null, assetsReady:null, exportBytes:0, saved:false, cameraOpening:false, cameraToken:0, stationBooth:'B1', stickers:[], sel:null, missions:[], exportDirty:false, exportTimer:0, exportChain:Promise.resolve() };
 const pause = ms => new Promise(resolve=>setTimeout(resolve,ms));
+// 카메라는 HTTPS(또는 localhost)에서만 켜집니다. 내려받은 파일을 바로 열면(file://, content://) 권한을 허용해도 막힙니다.
+const servedSafely = () => window.isSecureContext && /^https?:$/.test(location.protocol);
+const FILE_OPEN_MESSAGE = '이 페이지를 파일로 열어서 카메라를 쓸 수 없어요. 휴대폰·크롬북 설정 문제가 아닙니다. 촬영 사이트의 https:// 주소로 열어 주세요.';
 const configured = () => /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec(?:\?.*)?$/.test(CONFIG.GAS_URL);
 function status(id,text,bad=false){$(id).textContent=text;$(id).classList.toggle('bad',bad);}
 function setBusy(value){S.busy=value;syncControls();}
@@ -141,7 +144,7 @@ async function openCamera(deviceId=''){
   status('cameraStatus','카메라 권한을 허용해 주세요. 돌아가기를 눌러 준비를 취소할 수 있습니다.');$('cameraRetry').hidden=true;
   let timer;
   try{
-    if(!navigator.mediaDevices?.getUserMedia)throw new Error('카메라는 HTTPS 또는 localhost에서 사용할 수 있습니다.');
+    if(!servedSafely()||!navigator.mediaDevices?.getUserMedia)throw new Error(FILE_OPEN_MESSAGE);
     const constraints={width:{ideal:1920},height:{ideal:1080},...(deviceId?{deviceId:{exact:deviceId}}:{facingMode:'user'})};
     const request=navigator.mediaDevices.getUserMedia({video:constraints,audio:false}).then(stream=>{
       if(token!==S.cameraToken){stream.getTracks().forEach(track=>track.stop());throw new Error('취소된 카메라 요청입니다.');}return stream;
@@ -158,7 +161,7 @@ async function openCamera(deviceId=''){
   }catch(error){
     if(token!==S.cameraToken)return;
     stopCamera();const names={NotAllowedError:'카메라 권한을 허용한 뒤 다시 연결해 주세요.',NotFoundError:'카메라를 찾지 못했습니다. 연결을 확인해 주세요.',NotReadableError:'다른 프로그램에서 카메라를 사용 중인지 확인해 주세요.'};
-    status('cameraStatus',names[error.name]||error.message,true);$('cameraRetry').hidden=false;
+    status('cameraStatus',servedSafely()?(names[error.name]||error.message):FILE_OPEN_MESSAGE,true);$('cameraRetry').hidden=false;
     setBusy(false);
   }finally{
     clearTimeout(timer);if(token===S.cameraToken){S.cameraOpening=false;setBusy(false);}
@@ -530,7 +533,8 @@ async function boot(){
   const booth=(new URLSearchParams(location.search).get('booth')||'B1').toUpperCase();S.booth=CONFIG.BOOTHS.includes(booth)?booth:'B1';$('boothTag').textContent=`${S.booth.slice(1)}번 부스`;
   S.stationBooth=S.booth;
   $('heroArt').src=HEADER_ART;
-  if(!configured()){$('setupNotice').hidden=false;$('setupNotice').textContent='촬영·사진 저장 모드입니다. 구글 드라이브 접수는 아직 연결되지 않았습니다.';}
+  if(!servedSafely()){$('setupNotice').hidden=false;$('setupNotice').classList.add('error');$('setupNotice').textContent=FILE_OPEN_MESSAGE+' 지금 주소: '+location.protocol+'//…';}
+  else if(!configured()){$('setupNotice').hidden=false;$('setupNotice').textContent='촬영·사진 저장 모드입니다. 구글 드라이브 접수는 아직 연결되지 않았습니다.';}
   bind();setBusy(true);
   S.assetsReady=Promise.all([imageReady(HEADER_ART).then(img=>{S.art=img;}),fontsReady()]).then(()=>{buildStickers();addPhotoCards();renderStickerPalette();});
   try{await S.assetsReady;const shots=demoShots();drawStrip($('welcomeGreen'),shots,'ticket','DEMO',true);drawStrip($('welcomeNote'),shots,'note','DEMO',true);}
